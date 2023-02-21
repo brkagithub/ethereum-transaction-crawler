@@ -17,7 +17,15 @@ type Transaction = {
 const Home: NextPage = () => {
   const hello = api.web3.hello.useQuery({ text: "from tRPC" });
 
-  const Transactions: React.FC<{}> = ({}) => {
+  // Takes a transaction object and renders it as a card
+  const TransactionCard: React.FC<{ t: Transaction }> = ({ t }) => {
+    return <div>transaction</div>;
+  };
+
+  // Takes an address and fetches and later renders all transactions from the address
+  const Transactions: React.FC<{ addressToFetchFrom: string }> = ({
+    addressToFetchFrom,
+  }) => {
     return <div>transactions</div>;
   };
 
