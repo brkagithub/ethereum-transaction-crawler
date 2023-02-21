@@ -15,7 +15,7 @@ const navigation: navigationType[] = [
   { name: "Token balance", href: "/balance" },
 ];
 
-const Navbar: React.FC<{}> = ({}) => {
+const Navbar: React.FC = () => {
   return (
     <div id="navbar" className="flex flex-row items-center justify-center">
       {navigation.map((n) => (
