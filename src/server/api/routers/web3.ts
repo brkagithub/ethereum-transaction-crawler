@@ -16,6 +16,8 @@ export const web3Router = createTRPCRouter({
     .query(async ({ input }) => {
       const apiUrl = `https://api.etherscan.io/api?module=account&action=txlist&address=${input.address}&startblock=0&endblock=99999999&page=1&offset=10&sort=desc&apikey=${process.env.ETHERSCAN_API_KEY}`;
 
+      if (!apiUrl) return { transactions: [] };
+
       const response = await fetch(apiUrl, {
         method: "GET",
         headers: {
@@ -23,6 +25,7 @@ export const web3Router = createTRPCRouter({
         },
       });
 
+      //@ts-ignore
       const transactions: z.infer<typeof Transaction>[] = (
         await response.json()
       ).result;
