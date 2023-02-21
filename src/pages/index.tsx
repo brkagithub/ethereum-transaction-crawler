@@ -35,11 +35,13 @@ const Home: NextPage = () => {
       <table className="border-collapse bg-white shadow-lg">
         <tr>
           {tableHeaders.map((h) => (
-            <th className="border bg-blue-100 px-8 py-4 text-left">{h}</th>
+            <th key={h} className="border bg-blue-100 px-8 py-4 text-left">
+              {h}
+            </th>
           ))}
         </tr>
         {transactions.map((t) => (
-          <tr>
+          <tr key={t.hash}>
             <td className="border px-8 py-4">
               <div className="flex cursor-pointer flex-row items-center justify-between ">
                 <span className="pr-2">{t.hash.substring(0, 15)}...</span>
