@@ -23,7 +23,6 @@ export const web3Router = createTRPCRouter({
         },
       });
 
-      //@ts-ignore
       const transactions: z.infer<typeof Transaction>[] = (
         await response.json()
       ).result;
