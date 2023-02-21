@@ -11,13 +11,6 @@ export const Transaction = z.object({
 });
 
 export const web3Router = createTRPCRouter({
-  hello: publicProcedure
-    .input(z.object({ text: z.string() }))
-    .query(({ input }) => {
-      return {
-        greeting: `Hello ${input.text}`,
-      };
-    }),
   transactions: publicProcedure
     .input(z.object({ address: z.string() }))
     .query(async ({ input }) => {
@@ -30,8 +23,9 @@ export const web3Router = createTRPCRouter({
         },
       });
 
-      let transactions: z.infer<typeof Transaction>[] = (await response.json())
-        .result;
+      const transactions: z.infer<typeof Transaction>[] = (
+        await response.json()
+      ).result;
 
       return {
         transactions,
