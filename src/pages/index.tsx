@@ -34,9 +34,12 @@ const Home: NextPage = () => {
   }) => {
     // Fetch transactions with tRPC query from our router
     const { data: transactionsData, isLoading } =
-      api.web3.transactions.useQuery({
-        address: addressToFetchFrom,
-      });
+      api.web3.transactions.useQuery(
+        {
+          address: addressToFetchFrom,
+        },
+        { refetchOnWindowFocus: false }
+      );
 
     if (
       !transactionsData ||
