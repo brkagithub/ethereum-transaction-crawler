@@ -9,7 +9,14 @@ import { api } from "~/utils/api";
 
 type Transaction = z.infer<typeof Transaction>;
 
-let tableHeaders = ["Txn Hash", "Block", "Age", "From", "To", "Value"] as const;
+const tableHeaders = [
+  "Txn Hash",
+  "Block",
+  "Age",
+  "From",
+  "To",
+  "Value",
+] as const;
 
 const Home: NextPage = () => {
   // Takes a transaction object and renders it as a card
@@ -29,7 +36,7 @@ const Home: NextPage = () => {
 
     if (!transactionsData) return <div></div>;
 
-    let transactions = transactionsData.transactions;
+    const transactions = transactionsData.transactions;
 
     return (
       <table className="border-collapse bg-white shadow-lg">
