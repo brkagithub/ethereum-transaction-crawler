@@ -45,22 +45,27 @@ const tableHeaders = [
 
 const Home: NextPage = () => {
   const [address, setAddress] = useState("");
+  const [block, setBlock] = useState("");
+
+  const [addressToFetch, setAddressToFetch] = useState("");
+  const [blockToFetch, setBlockToFetch] = useState(0);
 
   // Takes a transaction object and renders it as a card
-
   const TransactionCard: React.FC<{ t: Transaction }> = ({ t }) => {
     return <div>transaction</div>;
   };
 
   // Takes an address and fetches and later renders all transactions from the address
-  const Transactions: React.FC<{ addressToFetchFrom: string }> = ({
-    addressToFetchFrom,
-  }) => {
+  const Transactions: React.FC<{
+    addressToFetchFrom: string;
+    blockToFetchFrom: number;
+  }> = ({ addressToFetchFrom, blockToFetchFrom }) => {
     // Fetch transactions with tRPC query from our router
     const { data: transactionsData, isLoading } =
       api.web3.transactions.useQuery(
         {
           address: addressToFetchFrom,
+          cursorBlock: blockToFetchFrom,
         },
         { refetchOnWindowFocus: false }
       );
@@ -118,12 +123,11 @@ const Home: NextPage = () => {
     );
   };
 
-  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.charCode !== 13) {
-      return;
+  const showTransactions = () => {
+    if (/^\d+$/.test(block) && ethers.isAddress(address)) {
+      setAddressToFetch(address);
+      setBlockToFetch(parseInt(block));
     }
-    const target = e.target as HTMLInputElement;
-    setAddress(target.value);
   };
 
   return (
@@ -146,24 +150,48 @@ const Home: NextPage = () => {
           <div className="p-2"></div>
           <div className="flex flex-col items-center justify-center">
             <input
-              onKeyPress={handleKeyPress}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setAddress(e.target.value);
+              }}
               className="focus:shadow-outline w-96 rounded-lg border border-blue-300 bg-gray-100 py-2 px-3 leading-tight shadow focus:outline-none"
             ></input>
-            <span
-              className={
-                address == ""
-                  ? "hidden"
-                  : ethers.isAddress(address)
-                  ? "hidden"
-                  : "text-red-400"
-              }
-            >
-              Please enter a valid Ethereum address
-            </span>
+            {!ethers.isAddress(address) && (
+              <span className="text-blue-500">
+                Please enter a valid Ethereum address
+              </span>
+            )}
           </div>
         </div>
         <div className="p-4"></div>
-        <Transactions addressToFetchFrom={address}></Transactions>
+        <div className="flex flex-row items-center justify-center">
+          <div className="text-lg font-semibold">Starting from block:</div>
+          <div className="p-2"></div>
+          <div className="flex flex-col items-center justify-center">
+            <input
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setBlock(e.target.value);
+              }}
+              className="focus:shadow-outline w-96 rounded-lg border border-blue-300 bg-gray-100 py-2 px-3 leading-tight shadow focus:outline-none"
+            ></input>
+            {!/^\d+$/.test(block) && (
+              <span className="text-blue-500">
+                Please enter a valid Ethereum block
+              </span>
+            )}
+          </div>
+        </div>
+        <div className="p-4"></div>
+        <button
+          className="rounded-full bg-blue-400 py-2 px-4 font-bold text-white hover:bg-blue-700"
+          onClick={showTransactions}
+        >
+          Show
+        </button>
+        <div className="p-4"></div>
+        <Transactions
+          addressToFetchFrom={addressToFetch}
+          blockToFetchFrom={blockToFetch}
+        ></Transactions>
       </div>
     </>
   );
