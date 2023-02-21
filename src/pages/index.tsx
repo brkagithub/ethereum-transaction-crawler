@@ -7,6 +7,30 @@ import { Transaction } from "~/server/api/routers/web3";
 import { ethers } from "ethers";
 import { api } from "~/utils/api";
 import { KeyboardEvent, useState } from "react";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import updateLocal from "dayjs/plugin/updateLocale";
+
+dayjs.extend(relativeTime);
+dayjs.extend(updateLocal);
+
+dayjs.updateLocale("en", {
+  relativeTime: {
+    future: "in %s",
+    past: "%s ago",
+    s: "1m",
+    m: "1m",
+    mm: "%dm",
+    h: "1h",
+    hh: "%dh",
+    d: "1d",
+    dd: "%dd",
+    M: "1M",
+    MM: "%dM",
+    y: "1y",
+    yy: "%dy",
+  },
+});
 
 type Transaction = z.infer<typeof Transaction>;
 
@@ -63,13 +87,15 @@ const Home: NextPage = () => {
           {transactions.map((t) => (
             <tr key={t.hash}>
               <td className="border px-8 py-4">
-                <div className="flex cursor-pointer flex-row items-center justify-between ">
+                <div className="flex cursor-pointer flex-row items-center justify-between">
                   <span className="pr-2">{t.hash.substring(0, 15)}...</span>
                   <CopyButton text={t.hash}></CopyButton>
                 </div>
               </td>
               <td className="border px-8 py-4">{t.blockNumber}</td>
-              <td className="border px-8 py-4">{t.timeStamp}</td>
+              <td className="border px-8 py-4">
+                {dayjs.unix(parseInt(t.timeStamp)).fromNow()}
+              </td>
               <td className="border px-8 py-4">
                 <div className="flex cursor-pointer flex-row items-center justify-between ">
                   <span className="pr-2">{t.from.substring(0, 10)}...</span>
@@ -112,17 +138,29 @@ const Home: NextPage = () => {
       </Head>
       <div className="mx-auto flex max-w-7xl flex-col items-center px-2 pt-2 sm:px-6 lg:px-8">
         <Navbar></Navbar>
-        <div>To do: validate on frontend eth address</div>
         <div className="p-4"></div>
         <div className="flex flex-row items-center justify-center">
           <div className="text-lg font-semibold">
-            Show transactions for ethereum address (click enter to show):
+            Show transactions for Ethereum address (click enter to show):
           </div>
           <div className="p-2"></div>
-          <input
-            onKeyPress={handleKeyPress}
-            className="focus:shadow-outline w-96 rounded-lg border border-blue-300 bg-gray-100 py-2 px-3 leading-tight shadow focus:outline-none"
-          ></input>
+          <div className="flex flex-col items-center justify-center">
+            <input
+              onKeyPress={handleKeyPress}
+              className="focus:shadow-outline w-96 rounded-lg border border-blue-300 bg-gray-100 py-2 px-3 leading-tight shadow focus:outline-none"
+            ></input>
+            <span
+              className={
+                address == ""
+                  ? "hidden"
+                  : ethers.isAddress(address)
+                  ? "hidden"
+                  : "text-red-400"
+              }
+            >
+              Please enter a valid Ethereum address
+            </span>
+          </div>
         </div>
         <div className="p-4"></div>
         <Transactions addressToFetchFrom={address}></Transactions>
