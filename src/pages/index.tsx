@@ -4,8 +4,22 @@ import Navbar from "~/components/Navbar";
 
 import { api } from "~/utils/api";
 
+type Transaction = {
+  hash: string;
+  blockNumber: string;
+  timestamp: string;
+  from: string;
+  to: string;
+  value: string;
+  //txnfee/gas/?
+};
+
 const Home: NextPage = () => {
   const hello = api.web3.hello.useQuery({ text: "from tRPC" });
+
+  const Transactions: React.FC<{}> = ({}) => {
+    return <div>transactions</div>;
+  };
 
   return (
     <>
