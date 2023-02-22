@@ -92,7 +92,7 @@ const Home: NextPage = () => {
           {transactions.map((t) => (
             <tr key={t.hash}>
               <td className="border px-8 py-4">
-                <div className="flex cursor-pointer flex-row items-center justify-between">
+                <div className="flex flex-row items-center justify-between">
                   <span className="pr-2">{t.hash.substring(0, 15)}...</span>
                   <CopyButton text={t.hash}></CopyButton>
                 </div>
@@ -102,13 +102,13 @@ const Home: NextPage = () => {
                 {dayjs.unix(parseInt(t.timeStamp)).fromNow()}
               </td>
               <td className="border px-8 py-4">
-                <div className="flex cursor-pointer flex-row items-center justify-between ">
+                <div className="flex flex-row items-center justify-between ">
                   <span className="pr-2">{t.from.substring(0, 10)}...</span>
                   <CopyButton text={t.from}></CopyButton>
                 </div>
               </td>
               <td className="cursor-pointer border px-8 py-4">
-                <div className="flex cursor-pointer flex-row items-center justify-between ">
+                <div className="flex flex-row items-center justify-between ">
                   <span className="pr-2">{t.to.substring(0, 10)}...</span>
                   <CopyButton text={t.to}></CopyButton>
                 </div>
