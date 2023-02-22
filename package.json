@@ -20,6 +20,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "superjson": "1.9.1",
+    "web3": "^1.8.2",
     "zod": "^3.20.2"
   },
   "devDependencies": {
