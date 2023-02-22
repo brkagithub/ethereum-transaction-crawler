@@ -128,7 +128,7 @@ const Home: NextPage = () => {
             <button
               disabled={isFetchingNextPage || isLoading}
               className="rounded-full bg-blue-400 py-2 px-4 font-bold text-white hover:bg-blue-700 disabled:opacity-50"
-              onClick={() => fetchNextPage()}
+              onClick={async () => await fetchNextPage()}
             >
               Load more
             </button>
