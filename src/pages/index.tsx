@@ -179,7 +179,7 @@ const Home: NextPage = () => {
               className="focus:shadow-outline w-96 rounded-lg border border-blue-300 bg-gray-100 py-2 px-3 leading-tight shadow focus:outline-none"
             ></input>
             {!ethers.isAddress(address) && (
-              <span className="text-blue-500">
+              <span className="text-red-500">
                 Please enter a valid Ethereum address
               </span>
             )}
@@ -197,7 +197,7 @@ const Home: NextPage = () => {
               className="focus:shadow-outline w-96 rounded-lg border border-blue-300 bg-gray-100 py-2 px-3 leading-tight shadow focus:outline-none"
             ></input>
             {!/^\d+$/.test(block) && (
-              <span className="text-blue-500">
+              <span className="text-red-500">
                 Please enter a valid Ethereum block
               </span>
             )}
