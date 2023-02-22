@@ -16,6 +16,7 @@ const server = z.object({
  */
 const client = z.object({
   // NEXT_PUBLIC_CLIENTVAR: z.string().min(1),
+  INFURA_KEY: z.string(),
 });
 
 /**
@@ -26,6 +27,7 @@ const client = z.object({
 const processEnv = {
   NODE_ENV: process.env.NODE_ENV,
   ETHERSCAN_API_KEY: process.env.ETHERSCAN_API_KEY,
+  INFURA_KEY: process.env.INFURA_KEY,
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 };
 
