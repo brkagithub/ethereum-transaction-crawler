@@ -3,10 +3,9 @@ import Head from "next/head";
 import { z } from "zod";
 import CopyButton from "~/components/CopyButton";
 import Navbar from "~/components/Navbar";
-import { Transaction } from "~/server/api/routers/web3";
 import { ethers } from "ethers";
 import { api } from "~/utils/api";
-import { KeyboardEvent, useState } from "react";
+import { useState } from "react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import updateLocal from "dayjs/plugin/updateLocale";
@@ -50,11 +49,6 @@ const Home: NextPage = () => {
   const [addressToFetch, setAddressToFetch] = useState("");
   const [blockToFetch, setBlockToFetch] = useState(0);
 
-  // Takes a transaction object and renders it as a card
-  const TransactionCard: React.FC<{ t: Transaction }> = ({ t }) => {
-    return <div>transaction</div>;
-  };
-
   // Takes an address and fetches and later renders all transactions from the address
   const Transactions: React.FC<{
     addressToFetchFrom: string;
@@ -84,8 +78,6 @@ const Home: NextPage = () => {
     const transactions = transactionsData.pages
       .map((p) => p.transactions)
       .flat();
-
-    console.log(transactions);
 
     return (
       <>
