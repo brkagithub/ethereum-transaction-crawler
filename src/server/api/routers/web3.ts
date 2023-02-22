@@ -24,9 +24,11 @@ export const web3Router = createTRPCRouter({
     .query(async ({ input }) => {
       const { cursor, limit, address, block } = input;
 
+      // Return empty array in case of incorrect parameters
       if (!Number.isInteger(block) || !ethers.isAddress(address))
         return { transactions: [] };
 
+      // Construct API URL
       const apiUrl = `https://api.etherscan.io/api?module=account&action=txlist&address=${address}&startblock=${block}&endblock=${
         cursor ? cursor : 99999999
       }&page=1&offset=${limit + 1}&sort=desc&apikey=${
@@ -40,17 +42,20 @@ export const web3Router = createTRPCRouter({
         },
       });
 
+      // Get transaction from the api response result
       const transactions: z.infer<typeof Transaction>[] = (
         await response.json()
       ).result;
 
       let nextCursorBlock: typeof cursor | undefined = undefined;
 
+      // If there are more transactions than the limit, set the next cursor block
       if (transactions.length > limit) {
         const nextTransaction = transactions.pop() as (typeof transactions)[0];
         nextCursorBlock = parseInt(nextTransaction.blockNumber);
       }
 
+      // Return an object with the transactions and the next cursor block
       return {
         transactions,
         nextCursorBlock,
