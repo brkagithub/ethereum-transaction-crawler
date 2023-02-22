@@ -46,10 +46,10 @@ const tableHeaders = [
 const limitOptions = [5, 10, 25, 50, 100];
 
 const Home: NextPage = () => {
+  // React state for variables that need it
   const [limit, setLimit] = useState(5);
   const [address, setAddress] = useState("");
   const [block, setBlock] = useState("");
-
   const [addressToFetch, setAddressToFetch] = useState("");
   const [blockToFetch, setBlockToFetch] = useState(0);
 
@@ -58,7 +58,7 @@ const Home: NextPage = () => {
     addressToFetchFrom: string;
     blockToFetchFrom: number;
   }> = ({ addressToFetchFrom, blockToFetchFrom }) => {
-    // Fetch transactions with tRPC query from our router
+    // Fetch transactions with tRPC infinite query from our router
     const {
       data: transactionsData,
       isLoading,
@@ -77,12 +77,15 @@ const Home: NextPage = () => {
       }
     );
 
+    // If we dont get anything back - dont render anything
     if (!transactionsData) return <div></div>;
 
+    // Flatten the infinite query result
     const transactions = transactionsData.pages
       .map((p) => p.transactions)
       .flat();
 
+    // Render the table with transactions
     return (
       <>
         <table className="border-collapse bg-white shadow-lg">
@@ -141,6 +144,7 @@ const Home: NextPage = () => {
     );
   };
 
+  // Change the stateful variables which will cause the Transactions component to re-render and do another api call with the new parameters
   const showTransactions = () => {
     if (/^\d+$/.test(block) && ethers.isAddress(address)) {
       setAddressToFetch(address);
@@ -148,6 +152,7 @@ const Home: NextPage = () => {
     }
   };
 
+  // Render the whole page
   return (
     <>
       <Head>
