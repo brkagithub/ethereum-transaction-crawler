@@ -11,10 +11,15 @@ const Balance: NextPage = () => {
   const [timestamp, setTimestamp] = useState<number | undefined>(undefined);
 
   // tRPC query to retrieve balance at timestamp
-  const { data: balanceData } = api.web3.balance.useQuery({
-    address,
-    timestamp,
-  });
+  const { data: balanceData } = api.web3.balance.useQuery(
+    {
+      address,
+      timestamp,
+    },
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
 
   // Render the whole page
   return (
