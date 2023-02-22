@@ -33,8 +33,6 @@ export const web3Router = createTRPCRouter({
         process.env.ETHERSCAN_API_KEY
       }`;
 
-      console.log(apiUrl);
-
       const response = await fetch(apiUrl, {
         method: "GET",
         headers: {
@@ -49,10 +47,8 @@ export const web3Router = createTRPCRouter({
       let nextCursorBlock: typeof cursor | undefined = undefined;
 
       if (transactions.length > limit) {
-        //console.log(transactions[transactions.length - 1]);
         const nextTransaction = transactions.pop() as (typeof transactions)[0];
         nextCursorBlock = parseInt(nextTransaction.blockNumber);
-        console.log(nextCursorBlock);
       }
 
       return {
