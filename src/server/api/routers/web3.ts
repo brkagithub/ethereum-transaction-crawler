@@ -1,7 +1,13 @@
 import { ethers } from "ethers";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import Web3 from "web3";
 
+const web3 = new Web3(
+  new Web3.providers.HttpProvider(
+    `https://mainnet.infura.io/v3/${process.env.INFURA_KEY}`
+  )
+);
 export const Transaction = z.object({
   hash: z.string(),
   blockNumber: z.string(),
@@ -60,5 +66,39 @@ export const web3Router = createTRPCRouter({
         transactions,
         nextCursorBlock,
       };
+    }),
+  balance: publicProcedure
+    .input(
+      z.object({
+        address: z.string(),
+        timestamp: z.number().nullish(),
+      })
+    )
+    .query(async ({ input }) => {
+      if (!input.timestamp || !ethers.isAddress(input.address)) return null;
+
+      // Construct API URL
+      const apiUrl = `https://api.etherscan.io/api?module=block&action=getblocknobytime&timestamp=${input.timestamp.toString()}&closest=before&apikey=${
+        process.env.ETHERSCAN_API_KEY
+      }`;
+
+      // Get block number from the api response result
+      const response = await fetch(apiUrl, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const blockNumber: number = parseInt((await response.json()).result);
+
+      // Convert wei to ether if success, console.log(error) otherwise
+      try {
+        const balance = await web3.eth.getBalance(input.address, blockNumber);
+        return web3.utils.fromWei(balance, "ether");
+      } catch (error) {
+        console.log(error);
+        return null;
+      }
     }),
 });
