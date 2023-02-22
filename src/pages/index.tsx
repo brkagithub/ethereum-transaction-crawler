@@ -9,6 +9,7 @@ import { useState } from "react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import updateLocal from "dayjs/plugin/updateLocale";
+import { Transaction } from "~/server/api/routers/web3";
 
 dayjs.extend(relativeTime);
 dayjs.extend(updateLocal);
