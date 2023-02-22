@@ -73,6 +73,7 @@ const Home: NextPage = () => {
       },
       {
         refetchOnWindowFocus: false,
+        refetchOnMount: false,
         getNextPageParam: (lastPage) => lastPage.nextCursorBlock,
       }
     );
