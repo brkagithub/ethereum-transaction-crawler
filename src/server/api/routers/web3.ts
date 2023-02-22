@@ -16,17 +16,24 @@ export const web3Router = createTRPCRouter({
     .input(
       z.object({
         address: z.string(),
-        cursorBlock: z.number(),
+        cursor: z.number().nullish(),
+        block: z.number().nullish(),
         limit: z.number().min(5).max(100).default(10),
       })
     )
     .query(async ({ input }) => {
-      const { cursorBlock, limit, address } = input;
+      const { cursor, limit, address, block } = input;
 
-      if (!Number.isInteger(cursorBlock) || !ethers.isAddress(address))
+      if (!Number.isInteger(block) || !ethers.isAddress(address))
         return { transactions: [] };
 
-      const apiUrl = `https://api.etherscan.io/api?module=account&action=txlist&address=${address}&startblock=${cursorBlock}&endblock=99999999&page=1&offset=${limit}&sort=desc&apikey=${process.env.ETHERSCAN_API_KEY}`;
+      const apiUrl = `https://api.etherscan.io/api?module=account&action=txlist&address=${address}&startblock=${block}&endblock=${
+        cursor ? cursor : 99999999
+      }&page=1&offset=${limit + 1}&sort=desc&apikey=${
+        process.env.ETHERSCAN_API_KEY
+      }`;
+
+      console.log(apiUrl);
 
       const response = await fetch(apiUrl, {
         method: "GET",
@@ -39,8 +46,18 @@ export const web3Router = createTRPCRouter({
         await response.json()
       ).result;
 
+      let nextCursorBlock: typeof cursor | undefined = undefined;
+
+      if (transactions.length > limit) {
+        //console.log(transactions[transactions.length - 1]);
+        const nextTransaction = transactions.pop() as (typeof transactions)[0];
+        nextCursorBlock = parseInt(nextTransaction.blockNumber);
+        console.log(nextCursorBlock);
+      }
+
       return {
         transactions,
+        nextCursorBlock,
       };
     }),
 });

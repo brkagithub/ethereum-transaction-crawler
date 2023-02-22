@@ -61,65 +61,87 @@ const Home: NextPage = () => {
     blockToFetchFrom: number;
   }> = ({ addressToFetchFrom, blockToFetchFrom }) => {
     // Fetch transactions with tRPC query from our router
-    const { data: transactionsData, isLoading } =
-      api.web3.transactions.useQuery(
-        {
-          address: addressToFetchFrom,
-          cursorBlock: blockToFetchFrom,
-        },
-        { refetchOnWindowFocus: false }
-      );
+    const {
+      data: transactionsData,
+      isLoading,
+      fetchNextPage,
+      hasNextPage,
+      isFetchingNextPage,
+    } = api.web3.transactions.useInfiniteQuery(
+      {
+        address: addressToFetchFrom,
+        block: blockToFetchFrom,
+        limit: 5,
+      },
+      {
+        refetchOnWindowFocus: false,
+        getNextPageParam: (lastPage) => lastPage.nextCursorBlock,
+      }
+    );
 
-    if (
-      !transactionsData ||
-      !transactionsData.transactions ||
-      typeof transactionsData.transactions === "string"
-    )
-      return <div></div>;
+    if (!transactionsData) return <div></div>;
 
-    const transactions = transactionsData.transactions;
+    const transactions = transactionsData.pages
+      .map((p) => p.transactions)
+      .flat();
+
+    console.log(transactions);
 
     return (
-      <table className="border-collapse bg-white shadow-lg">
-        <tbody>
-          <tr>
-            {tableHeaders.map((h) => (
-              <th key={h} className="border bg-blue-100 px-8 py-4 text-left">
-                {h}
-              </th>
-            ))}
-          </tr>
-          {transactions.map((t) => (
-            <tr key={t.hash}>
-              <td className="border px-8 py-4">
-                <div className="flex flex-row items-center justify-between">
-                  <span className="pr-2">{t.hash.substring(0, 15)}...</span>
-                  <CopyButton text={t.hash}></CopyButton>
-                </div>
-              </td>
-              <td className="border px-8 py-4">{t.blockNumber}</td>
-              <td className="border px-8 py-4">
-                {dayjs.unix(parseInt(t.timeStamp)).fromNow()}
-              </td>
-              <td className="border px-8 py-4">
-                <div className="flex flex-row items-center justify-between ">
-                  <span className="pr-2">{t.from.substring(0, 10)}...</span>
-                  <CopyButton text={t.from}></CopyButton>
-                </div>
-              </td>
-              <td className="cursor-pointer border px-8 py-4">
-                <div className="flex flex-row items-center justify-between ">
-                  <span className="pr-2">{t.to.substring(0, 10)}...</span>
-                  <CopyButton text={t.to}></CopyButton>
-                </div>
-              </td>
-              <td className="border px-8 py-4">
-                {ethers.formatEther(t.value)} ETH
-              </td>
+      <>
+        <table className="border-collapse bg-white shadow-lg">
+          <tbody>
+            <tr>
+              {tableHeaders.map((h) => (
+                <th key={h} className="border bg-blue-100 px-8 py-4 text-left">
+                  {h}
+                </th>
+              ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
+            {transactions.map((t) => (
+              <tr key={t.hash}>
+                <td className="border px-8 py-4">
+                  <div className="flex flex-row items-center justify-between">
+                    <span className="pr-2">{t.hash.substring(0, 15)}...</span>
+                    <CopyButton text={t.hash}></CopyButton>
+                  </div>
+                </td>
+                <td className="border px-8 py-4">{t.blockNumber}</td>
+                <td className="border px-8 py-4">
+                  {dayjs.unix(parseInt(t.timeStamp)).fromNow()}
+                </td>
+                <td className="border px-8 py-4">
+                  <div className="flex flex-row items-center justify-between ">
+                    <span className="pr-2">{t.from.substring(0, 10)}...</span>
+                    <CopyButton text={t.from}></CopyButton>
+                  </div>
+                </td>
+                <td className="cursor-pointer border px-8 py-4">
+                  <div className="flex flex-row items-center justify-between ">
+                    <span className="pr-2">{t.to.substring(0, 10)}...</span>
+                    <CopyButton text={t.to}></CopyButton>
+                  </div>
+                </td>
+                <td className="border px-8 py-4">
+                  {ethers.formatEther(t.value)} ETH
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {hasNextPage && (
+          <>
+            <div className="p-4"></div>
+            <button
+              disabled={isFetchingNextPage || isLoading}
+              className="rounded-full bg-blue-400 py-2 px-4 font-bold text-white hover:bg-blue-700 disabled:opacity-50"
+              onClick={() => fetchNextPage()}
+            >
+              Load more
+            </button>
+          </>
+        )}
+      </>
     );
   };
 
