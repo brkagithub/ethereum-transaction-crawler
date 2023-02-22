@@ -43,7 +43,10 @@ const tableHeaders = [
   "Value",
 ] as const;
 
+const limitOptions = [5, 10, 25, 50, 100];
+
 const Home: NextPage = () => {
+  const [limit, setLimit] = useState(5);
   const [address, setAddress] = useState("");
   const [block, setBlock] = useState("");
 
@@ -66,7 +69,7 @@ const Home: NextPage = () => {
       {
         address: addressToFetchFrom,
         block: blockToFetchFrom,
-        limit: 5,
+        limit: limit,
       },
       {
         refetchOnWindowFocus: false,
@@ -194,6 +197,23 @@ const Home: NextPage = () => {
               </span>
             )}
           </div>
+        </div>
+        <div className="p-4"></div>
+        <div className="flex flex-row items-center justify-center">
+          <div className="text-lg font-semibold">Show per page:</div>
+          <div className="p-2"></div>
+          <select
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+              setLimit(parseInt(e.target.value));
+            }}
+            className="focus:shadow-outline rounded-lg border border-blue-300 bg-gray-100 py-2 px-3 leading-tight shadow focus:outline-none"
+          >
+            {limitOptions.map((lo) => (
+              <option key={lo} value={lo}>
+                {lo}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="p-4"></div>
         <button
