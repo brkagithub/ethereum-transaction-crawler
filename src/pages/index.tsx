@@ -168,7 +168,7 @@ const Home: NextPage = () => {
         <div className="p-4"></div>
         <div className="flex flex-row items-center justify-center">
           <div className="text-lg font-semibold">
-            Show transactions for Ethereum address (click enter to show):
+            Show transactions for Ethereum address:
           </div>
           <div className="p-2"></div>
           <div className="flex flex-col items-center justify-center">
