@@ -20,7 +20,7 @@ const Balance: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Ethereum web crawler - Historical balance</title>
+        <title>Ethereum web crawler - historical balance</title>
         <meta
           name="description"
           content="Ethereum web crawler made for Trace Labs internship."
