@@ -223,7 +223,8 @@ const Home: NextPage = () => {
         </div>
         <div className="p-4"></div>
         <button
-          className="rounded-full bg-blue-400 py-2 px-4 font-bold text-white hover:bg-blue-700"
+          disabled={!(/^\d+$/.test(block) && ethers.isAddress(address))}
+          className="rounded-full bg-blue-400  py-2 px-4 font-bold text-white hover:bg-blue-700 disabled:opacity-50 disabled:hover:bg-blue-400 disabled:hover:opacity-50"
           onClick={showTransactions}
         >
           Show
