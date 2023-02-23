@@ -2,6 +2,10 @@
 
 This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
 
+# How to access it on the internet?
+
+https://ethereum-transaction-crawler-beta.vercel.app/
+
 # How to start it on my local machine?
 
 1. git clone https://github.com/brkagithub/ethereum-transaction-crawler.git
