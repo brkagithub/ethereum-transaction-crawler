@@ -13,4 +13,4 @@ https://ethereum-transaction-crawler-beta.vercel.app/
 3. npm install
 4. npm run dev (or npm run build -> npm run start)
 
-P.S. normally i would delete gitignore the .env file but i want to make it easier to run it on your pc so it's still in the repo.
+P.S. normally i would gitignore the .env file but i want to make it easier to run it on your pc so it's still in the repo.
